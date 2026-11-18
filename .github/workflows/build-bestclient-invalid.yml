@@ -1,0 +1,89 @@
+name: Build BestClient Invalid (Windows + Linux)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout BestClient fork with bundled libraries
+        uses: actions/checkout@v5
+        with:
+          repository: kostadaun333-del/BestClient
+          ref: invalid-settings
+          submodules: recursive
+
+      - name: Set up MSVC environment
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Configure
+        run: >-
+          cmake -B build -G Ninja
+          -DCMAKE_BUILD_TYPE=Release
+          -DCLIENT_EXECUTABLE=InvalidClient
+          -DEXCEPTION_HANDLING=OFF
+          -DVULKAN=OFF
+          -DCLIENT=ON
+          -DSERVER=OFF
+          -DTOOLS=OFF
+          -DDOWNLOAD_GTEST=OFF
+          -DPRECOMPILE_HEADERS=OFF
+          -DPREFER_BUNDLED_LIBS=ON
+          -DDISCORD=OFF
+          -DSTEAM=OFF
+
+      - name: Build and package
+        run: cmake --build build --target package_default --parallel
+
+      - name: Upload client archive
+        uses: actions/upload-artifact@v6
+        with:
+          name: BestClient-Invalid-win64
+          path: build/bestclient-*.zip
+          if-no-files-found: error
+
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout BestClient fork with bundled libraries
+        uses: actions/checkout@v5
+        with:
+          repository: kostadaun333-del/BestClient
+          ref: invalid-settings
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y \
+            libavcodec-dev libavformat-dev libavutil-dev \
+            libcurl4-openssl-dev libfreetype6-dev libglew-dev \
+            libharfbuzz-dev libnotify-dev libogg-dev libopus-dev \
+            libopusfile-dev libpng-dev libsdl2-dev libsqlite3-dev \
+            libssl-dev libwavpack-dev libx11-dev libx264-dev \
+            libswresample-dev libswscale-dev ninja-build pkg-config
+
+      - name: Configure
+        run: >-
+          cmake -B build -G Ninja
+          -DCMAKE_BUILD_TYPE=Release
+          -DCLIENT_EXECUTABLE=InvalidClient
+          -DVULKAN=OFF
+          -DCLIENT=ON
+          -DSERVER=OFF
+          -DTOOLS=OFF
+          -DDOWNLOAD_GTEST=OFF
+          -DPRECOMPILE_HEADERS=OFF
+          -DDISCORD=OFF
+          -DSTEAM=OFF
+
+      - name: Build and package
+        run: cmake --build build --target package_default --parallel
+
+      - name: Upload client archive
+        uses: actions/upload-artifact@v6
+        with:
+          name: BestClient-Invalid-linux64
+          path: build/bestclient-*.tar.xz
+          if-no-files-found: error
