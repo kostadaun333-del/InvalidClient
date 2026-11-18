@@ -2,6 +2,8 @@
 #ifndef GAME_CLIENT_COMPONENTS_INVALID_ANALYSIS_H
 #define GAME_CLIENT_COMPONENTS_INVALID_ANALYSIS_H
 
+#include <engine/shared/protocol.h>
+
 #include <generated/protocol.h>
 
 #include <game/client/component.h>
