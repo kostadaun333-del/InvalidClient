@@ -24,7 +24,8 @@ jobs:
           cmake -B build -G Ninja
           -DCMAKE_BUILD_TYPE=Release
           -DCLIENT_EXECUTABLE=InvalidClient
-          -DEXCEPTION_HANDLING=ON
+          -DEXCEPTION_HANDLING=OFF
+          -DVULKAN=OFF
           -DCLIENT=ON
           -DSERVER=OFF
           -DDOWNLOAD_GTEST=OFF
@@ -64,6 +65,7 @@ jobs:
           cmake -B build -G Ninja
           -DCMAKE_BUILD_TYPE=Release
           -DCLIENT_EXECUTABLE=InvalidClient
+          -DVULKAN=OFF
           -DCLIENT=ON
           -DSERVER=OFF
           -DDOWNLOAD_GTEST=OFF
