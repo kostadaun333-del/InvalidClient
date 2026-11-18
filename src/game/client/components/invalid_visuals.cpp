@@ -560,8 +560,11 @@ void CInvalidVisuals::RenderFreezeWarning()
 	if(!pChar)
 		return;
 
-	const vec2 Pos = pChar->m_Core.m_Pos;
-	const vec2 Vel = pChar->m_Core.m_Vel;
+	const CCharacterCore *pCore = pChar->Core();
+	if(!pCore)
+		return;
+	const vec2 Pos = pCore->m_Pos;
+	const vec2 Vel = pCore->m_Vel;
 	const float Speed = length(Vel);
 	const vec2 Dir = Speed > 1.0f ? Vel / Speed : vec2(0.0f, -1.0f);
 
