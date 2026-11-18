@@ -11,6 +11,7 @@ class CInvalidVisuals : public CComponent
 {
 public:
 	CInvalidVisuals();
+	int Sizeof() const override { return sizeof(*this); }
 
 	void OnInit() override;
 	void OnReset() override;

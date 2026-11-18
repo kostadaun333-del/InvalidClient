@@ -8,6 +8,7 @@ class CInvalidTools : public CComponent
 {
 public:
 	CInvalidTools();
+	int Sizeof() const override { return sizeof(*this); }
 
 	void OnRender() override;
 
