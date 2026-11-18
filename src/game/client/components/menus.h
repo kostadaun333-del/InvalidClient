@@ -582,6 +582,9 @@ protected:
 	// found in menus_settings_ddnet.cpp
 	void RenderSettingsDDNet(CUIRect MainView);
 
+	// InvalidClient settings tab
+	void RenderSettingsInvalid(CUIRect MainView);
+
 	// found in menus_settings_general.cpp
 	void RenderSettingsGeneral(CUIRect MainView);
 	void RenderThemeSelection(CUIRect MainView);
@@ -715,6 +718,7 @@ public:
 		SETTINGS_GRAPHICS,
 		SETTINGS_SOUND,
 		SETTINGS_DDNET,
+		SETTINGS_INVALID,
 		SETTINGS_ASSETS,
 		SETTINGS_CREDITS,
 

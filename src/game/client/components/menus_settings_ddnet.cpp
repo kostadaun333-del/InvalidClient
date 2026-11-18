@@ -442,3 +442,62 @@ int CMenus::CPopupMapPickerContext::MapListFetchCallback(const CFsFileInfo *pInf
 
 	return 0;
 }
+
+void CMenus::RenderSettingsInvalid(CUIRect MainView)
+{
+	CUIRect Label, Button;
+
+	MainView.HSplitTop(30.0f, &Label, &MainView);
+	Ui()->DoLabel(&Label, "InvalidClient - all features in one place", 20.0f, TEXTALIGN_ML);
+
+	MainView.HSplitTop(26.0f, &Label, &MainView);
+	Ui()->DoLabel(&Label, "Cosmetics", 16.0f, TEXTALIGN_ML);
+
+	MainView.HSplitTop(20.0f, &Button, &MainView);
+	if(DoButton_CheckBox(&g_Config.m_ClInvalidWings, "Wings", g_Config.m_ClInvalidWings, &Button))
+		g_Config.m_ClInvalidWings ^= 1;
+	MainView.HSplitTop(20.0f, &Button, &MainView);
+	Ui()->DoScrollbarOption(&g_Config.m_ClInvalidWingStyle, &g_Config.m_ClInvalidWingStyle, &Button, "Wing style", 0, 3);
+
+	MainView.HSplitTop(20.0f, &Button, &MainView);
+	if(DoButton_CheckBox(&g_Config.m_ClInvalidGlasses, "Glasses", g_Config.m_ClInvalidGlasses, &Button))
+		g_Config.m_ClInvalidGlasses ^= 1;
+	MainView.HSplitTop(20.0f, &Button, &MainView);
+	Ui()->DoScrollbarOption(&g_Config.m_ClInvalidGlassesStyle, &g_Config.m_ClInvalidGlassesStyle, &Button, "Glasses style", 0, 2);
+
+	MainView.HSplitTop(20.0f, &Button, &MainView);
+	if(DoButton_CheckBox(&g_Config.m_ClInvalidHats, "Hats", g_Config.m_ClInvalidHats, &Button))
+		g_Config.m_ClInvalidHats ^= 1;
+	MainView.HSplitTop(20.0f, &Button, &MainView);
+	Ui()->DoScrollbarOption(&g_Config.m_ClInvalidHatStyle, &g_Config.m_ClInvalidHatStyle, &Button, "Hat style", 0, 3);
+
+	MainView.HSplitTop(26.0f, &Label, &MainView);
+	Ui()->DoLabel(&Label, "Weather", 16.0f, TEXTALIGN_ML);
+
+	MainView.HSplitTop(20.0f, &Button, &MainView);
+	if(DoButton_CheckBox(&g_Config.m_ClInvalidWeather, "Snow, snowdrifts and blizzard", g_Config.m_ClInvalidWeather, &Button))
+		g_Config.m_ClInvalidWeather ^= 1;
+	MainView.HSplitTop(20.0f, &Button, &MainView);
+	Ui()->DoScrollbarOption(&g_Config.m_ClInvalidSnowIntensity, &g_Config.m_ClInvalidSnowIntensity, &Button, "Snow intensity", 0, 100, &CUi::ms_LinearScrollbarScale, 0u, "%");
+
+	MainView.HSplitTop(26.0f, &Label, &MainView);
+	Ui()->DoLabel(&Label, "Camera", 16.0f, TEXTALIGN_ML);
+
+	MainView.HSplitTop(20.0f, &Button, &MainView);
+	Ui()->DoScrollbarOption(&g_Config.m_ClInvalidSmoothCamera, &g_Config.m_ClInvalidSmoothCamera, &Button, "Smooth camera (0 = off)", 0, 100);
+
+	MainView.HSplitTop(26.0f, &Label, &MainView);
+	Ui()->DoLabel(&Label, "Spectator analyzer", 16.0f, TEXTALIGN_ML);
+
+	MainView.HSplitTop(20.0f, &Button, &MainView);
+	if(DoButton_CheckBox(&g_Config.m_ClInvalidAnalysisOverlay, "Show suspicion overlay while spectating", g_Config.m_ClInvalidAnalysisOverlay, &Button))
+		g_Config.m_ClInvalidAnalysisOverlay ^= 1;
+
+	MainView.HSplitTop(10.0f, nullptr, &MainView);
+	MainView.HSplitTop(16.0f, &Label, &MainView);
+	Ui()->DoLabel(&Label, "The suspicion percentage is only a heuristic based on snapshot data.", 12.0f, TEXTALIGN_ML);
+	MainView.HSplitTop(16.0f, &Label, &MainView);
+	Ui()->DoLabel(&Label, "It is not proof of cheating and must never be the only reason for a ban.", 12.0f, TEXTALIGN_ML);
+	MainView.HSplitTop(16.0f, &Label, &MainView);
+	Ui()->DoLabel(&Label, "F9 opens the same settings as a quick in-game overlay.", 12.0f, TEXTALIGN_ML);
+}

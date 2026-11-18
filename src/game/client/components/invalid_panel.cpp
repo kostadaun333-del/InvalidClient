@@ -152,6 +152,9 @@ void CInvalidPanel::OnRender()
 	Ui()->DoScrollbarOption(&g_Config.m_ClInvalidSnowIntensity, &g_Config.m_ClInvalidSnowIntensity, &Row, "Snow intensity", 0, 100);
 
 	Window.HSplitTop(22.0f, &Row, &Window);
+	Ui()->DoScrollbarOption(&g_Config.m_ClInvalidSmoothCamera, &g_Config.m_ClInvalidSmoothCamera, &Row, "Smooth camera", 0, 100);
+
+	Window.HSplitTop(22.0f, &Row, &Window);
 	GameClient()->m_Menus.DoButton_CheckBox(&g_Config.m_ClInvalidAnalysisOverlay, "Suspicion overlay (spectator)", g_Config.m_ClInvalidAnalysisOverlay, &Row);
 
 	Ui()->RenderPopupMenus();

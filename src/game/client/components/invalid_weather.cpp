@@ -6,6 +6,7 @@
 #include <base/math.h>
 #include <base/time.h>
 
+#include <engine/client.h>
 #include <engine/client/enums.h>
 #include <engine/graphics.h>
 #include <engine/shared/config.h>

@@ -37,6 +37,9 @@ CCamera::CCamera()
 	m_CameraSmoothing = false;
 
 	m_LastTargetPos = vec2(0, 0);
+	m_InvalidSmoothCenter = vec2(0, 0);
+	m_InvalidSmoothPrevTarget = vec2(0, 0);
+	m_InvalidSmoothActive = false;
 	m_DyncamTargetCameraOffset = vec2(0, 0);
 	std::fill(std::begin(m_aDyncamCurrentCameraOffset), std::end(m_aDyncamCurrentCameraOffset), vec2(0.0f, 0.0f));
 	m_DyncamSmoothingSpeedBias = 0.5f;
@@ -399,6 +402,21 @@ void CCamera::OnRender()
 	if(m_CameraSmoothing)
 		m_Center = m_CameraSmoothingCenter;
 
+	// InvalidClient: smoothly follow the tee instead of snapping to each update.
+	if(g_Config.m_ClInvalidSmoothCamera > 0 && !GameClient()->m_Snap.m_SpecInfo.m_Active && !m_ForceFreeview)
+	{
+		const vec2 Target = m_Center;
+		if(!m_InvalidSmoothActive || distance(Target, m_InvalidSmoothPrevTarget) > 400.0f)
+		{
+			m_InvalidSmoothCenter = Target;
+			m_InvalidSmoothActive = true;
+		}
+		const float Alpha = 0.35f - (float)g_Config.m_ClInvalidSmoothCamera / 100.0f * 0.30f;
+		m_InvalidSmoothCenter += (Target - m_InvalidSmoothCenter) * Alpha;
+		m_Center = m_InvalidSmoothCenter;
+		m_InvalidSmoothPrevTarget = Target;
+	}
+
 	m_PrevCenter = m_Center;
 	m_PrevSpecId = SpecId;
 
@@ -420,6 +438,7 @@ void CCamera::OnConsoleInit()
 void CCamera::OnReset()
 {
 	m_CameraSmoothing = false;
+	m_InvalidSmoothActive = false;
 
 	m_Zoom = CCamera::ZoomStepsToValue(g_Config.m_ClDefaultZoom - 10);
 	m_Zooming = false;

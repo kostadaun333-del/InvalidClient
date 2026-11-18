@@ -92,6 +92,7 @@ MACRO_CONFIG_INT(ClInvalidGlasses, cl_invalid_glasses, 1, 0, 1, CFGFLAG_SAVE | C
 MACRO_CONFIG_INT(ClInvalidGlassesStyle, cl_invalid_glasses_style, 0, 0, 2, CFGFLAG_SAVE | CFGFLAG_CLIENT, "Glasses style (0 = round, 1 = sun, 2 = nerd)")
 MACRO_CONFIG_INT(ClInvalidHats, cl_invalid_hats, 1, 0, 1, CFGFLAG_SAVE | CFGFLAG_CLIENT, "Show client-side hats on tees")
 MACRO_CONFIG_INT(ClInvalidHatStyle, cl_invalid_hat_style, 0, 0, 3, CFGFLAG_SAVE | CFGFLAG_CLIENT, "Hat style (0 = crown, 1 = wizard, 2 = cap, 3 = halo)")
+MACRO_CONFIG_INT(ClInvalidSmoothCamera, cl_invalid_smooth_camera, 0, 0, 100, CFGFLAG_SAVE | CFGFLAG_CLIENT, "Smooth camera following strength (0 = off, 100 = very smooth)")
 MACRO_CONFIG_INT(ClShowFreezeBars, cl_show_freeze_bars, 1, 0, 1, CFGFLAG_SAVE | CFGFLAG_CLIENT, "Whether to show a freeze bar under frozen players to indicate the thaw time")
 MACRO_CONFIG_INT(ClFreezeBarsAlphaInsideFreeze, cl_freezebars_alpha_inside_freeze, 0, 0, 100, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Opacity of freeze bars inside freeze (0 invisible, 100 fully visible)")
 MACRO_CONFIG_INT(ClShowRecord, cl_showrecord, 0, 0, 1, CFGFLAG_CLIENT | CFGFLAG_SAVE, "Show old style DDRace client records")

@@ -54,6 +54,11 @@ private:
 
 	vec2 m_LastTargetPos;
 	float m_DyncamSmoothingSpeedBias;
+
+	// InvalidClient: smooth camera following
+	vec2 m_InvalidSmoothCenter;
+	vec2 m_InvalidSmoothPrevTarget;
+	bool m_InvalidSmoothActive;
 	bool m_CanUseCameraInfo;
 	bool m_UsingAutoSpecCamera;
 
