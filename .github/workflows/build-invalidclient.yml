@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: InvalidClient-win64
-          path: build/InvalidClient-*-win64.zip
+          path: build/InvalidClient-*.zip
           if-no-files-found: error
 
   linux:
@@ -78,5 +78,5 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: InvalidClient-linux64
-          path: build/InvalidClient-*-linux_x86_64.tar.xz
+          path: build/InvalidClient-*.tar.xz
           if-no-files-found: error
