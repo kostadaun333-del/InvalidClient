@@ -588,7 +588,7 @@ void CChat::OnMessage(int MsgType, void *pRawMsg)
 		*/
 
 		AddLine(pMsg->m_ClientId, pMsg->m_Team, pMsg->m_pMessage);
-		CInvalidTools::ProcessIncoming(pMsg->m_ClientId, pMsg->m_pMessage);
+		GameClient()->m_InvalidTools.ProcessIncoming(pMsg->m_ClientId, pMsg->m_pMessage);
 
 		if(Client()->State() != IClient::STATE_DEMOPLAYBACK &&
 			pMsg->m_ClientId == SERVER_MSG)
@@ -1367,7 +1367,7 @@ void CChat::SendChat(int Team, const char *pLine)
 	// InvalidClient: client-side commands and transliteration
 	char aProcessed[MAX_CHAT_LENGTH];
 	str_copy(aProcessed, pLine, sizeof(aProcessed));
-	CInvalidTools::ProcessOutgoing(aProcessed, sizeof(aProcessed));
+	GameClient()->m_InvalidTools.ProcessOutgoing(aProcessed, sizeof(aProcessed));
 	pLine = aProcessed;
 
 	// don't send empty messages

@@ -32,6 +32,7 @@ static float Smooth(float A, float B, float X)
 }
 
 static vec3 Mix(const vec3 &A, const vec3 &B, float T) { return A + (B - A) * T; }
+static float Mix(float A, float B, float T) { return A + (B - A) * T; }
 
 static float Hash2(int X, int Y)
 {
@@ -51,7 +52,7 @@ static float SdfCapsule(vec2 P, vec2 A, vec2 B, float R)
 
 static float SdfEllipse(vec2 P, vec2 C, vec2 R)
 {
-	return (length((P - C) / R) - 1.0f) * min(R.x, R.y);
+	return (length((P - C) / R) - 1.0f) * std::min(R.x, R.y);
 }
 
 static CImageInfo NewImage(int W, int H)
@@ -342,7 +343,7 @@ IGraphics::CTextureHandle CInvalidVisuals::MakeSoftCircle(const char *pName, flo
 	{
 		for(int X = 0; X < S; X++)
 		{
-			const vec2 P = (vec2(X, Y) + 0.5f) / S * 2.0f - 1.0f;
+			const vec2 P = ((vec2(X, Y) + vec2(0.5f)) / S) * 2.0f - vec2(1.0f);
 			const float D = length(P);
 			const float A = (1.0f - Smooth(Core, 1.0f, D)) * (1.0f - Smooth(0.96f, 1.0f, D));
 			PutPixel(Image, X, Y, vec3(R, G, B), Clamp01(A));
@@ -359,7 +360,7 @@ IGraphics::CTextureHandle CInvalidVisuals::MakeSadTexture()
 	{
 		for(int X = 0; X < S; X++)
 		{
-			const vec2 P = (vec2(X, Y) + 0.5f) / S * 2.0f - 1.0f;
+			const vec2 P = ((vec2(X, Y) + vec2(0.5f)) / S) * 2.0f - vec2(1.0f);
 			const float D = length(P);
 			float Mask = 0.0f;
 			vec3 Color = vec3(0.0f, 0.0f, 0.0f);

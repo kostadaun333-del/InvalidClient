@@ -13,8 +13,8 @@ public:
 	void OnRender() override;
 
 	// Called from CChat for outgoing / incoming chat processing.
-	static void ProcessOutgoing(char *pLine, int Size);
-	static void ProcessIncoming(int ClientId, const char *pLine);
+	void ProcessOutgoing(char *pLine, int Size);
+	void ProcessIncoming(int ClientId, const char *pLine);
 
 	// Transliteration Cyrillic -> Latin.
 	static void Transliterate(const char *pIn, char *pOut, int OutSize);
