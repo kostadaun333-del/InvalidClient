@@ -158,7 +158,7 @@ void CInvalidTools::RenderMarkers()
 			continue;
 		if(str_comp_nocase(GameClient()->m_aClients[i].m_aName, g_Config.m_ClInvalidTeamName) != 0)
 			continue;
-		const vec2 TargetPos = Snap.m_aCharacters[i].m_RenderPos;
+		const vec2 TargetPos = GameClient()->m_aClients[i].m_RenderPos;
 		const vec2 Delta = TargetPos - LocalPos;
 		const float DistBlocks = length(Delta) / 32.0f;
 		const float Angle = std::atan2(Delta.y, Delta.x);

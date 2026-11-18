@@ -472,7 +472,7 @@ void CControls::OnRender()
 			{
 				if(!GameClient()->m_Snap.m_aCharacters[i].m_Active)
 					continue;
-				const vec2 P = GameClient()->m_Snap.m_aCharacters[i].m_RenderPos;
+				const vec2 P = GameClient()->m_aClients[i].m_RenderPos;
 				const float D = distance(P, vec2(pLocal->m_X, pLocal->m_Y));
 				if(D < Best && D > 32.0f)
 				{
@@ -483,7 +483,7 @@ void CControls::OnRender()
 			if(Rescuer >= 0)
 			{
 				CNetObj_PlayerInput &DummyInput = m_aInputData[!g_Config.m_ClDummy];
-				const vec2 Target = GameClient()->m_Snap.m_aCharacters[Rescuer].m_RenderPos;
+				const vec2 Target = GameClient()->m_aClients[Rescuer].m_RenderPos;
 				DummyInput.m_TargetX = (int)Target.x;
 				DummyInput.m_TargetY = (int)Target.y;
 				DummyInput.m_Hook = 1;
