@@ -1,0 +1,80 @@
+name: Build InvalidClient (Windows + Linux)
+
+on:
+  workflow_dispatch:
+  push:
+    branches-ignore:
+      - gh-readonly-queue/**
+  pull_request:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout with bundled libraries
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Set up MSVC environment
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Configure
+        run: >-
+          cmake -B build -G Ninja
+          -DCMAKE_BUILD_TYPE=Release
+          -DCLIENT_EXECUTABLE=InvalidClient
+          -DEXCEPTION_HANDLING=ON
+          -DCLIENT=ON
+          -DSERVER=OFF
+          -DDOWNLOAD_GTEST=OFF
+          -DPRECOMPILE_HEADERS=OFF
+          -DPREFER_BUNDLED_LIBS=ON
+
+      - name: Build and package
+        run: cmake --build build --target package_default --parallel
+
+      - name: Upload client archive
+        uses: actions/upload-artifact@v6
+        with:
+          name: InvalidClient-win64
+          path: build/InvalidClient-*-win64.zip
+          if-no-files-found: error
+
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout with bundled libraries
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y \
+            libavcodec-dev libavformat-dev libavutil-dev \
+            libfreetype6-dev libglew-dev libnotify-dev \
+            libpng-dev libsdl2-dev libsqlite3-dev \
+            libswresample-dev libswscale-dev \
+            ninja-build pkg-config
+
+      - name: Configure
+        run: >-
+          cmake -B build -G Ninja
+          -DCMAKE_BUILD_TYPE=Release
+          -DCLIENT_EXECUTABLE=InvalidClient
+          -DCLIENT=ON
+          -DSERVER=OFF
+          -DDOWNLOAD_GTEST=OFF
+          -DPRECOMPILE_HEADERS=OFF
+
+      - name: Build and package
+        run: cmake --build build --target package_default --parallel
+
+      - name: Upload client archive
+        uses: actions/upload-artifact@v6
+        with:
+          name: InvalidClient-linux64
+          path: build/InvalidClient-*-linux_x86_64.tar.xz
+          if-no-files-found: error
