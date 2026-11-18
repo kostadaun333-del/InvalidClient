@@ -437,6 +437,59 @@ void CControls::OnRender()
 	{
 		m_aTargetPos[g_Config.m_ClDummy] = m_aMousePos[g_Config.m_ClDummy];
 	}
+
+	// InvalidClient: kog helper - quick weapon swap on pistol shot.
+	if(g_Config.m_ClInvalidQuickSwap && GameClient()->m_Snap.m_pLocalCharacter)
+	{
+		CNetObj_PlayerInput &Input = m_aInputData[g_Config.m_ClDummy];
+		const bool Firing = (Input.m_Fire & 1) != 0;
+		const int Weapon = GameClient()->m_Snap.m_pLocalCharacter->m_Weapon;
+		if(Firing && !m_InvalidWasFiring && Weapon == WEAPON_GUN)
+		{
+			Input.m_WantedWeapon = WEAPON_HAMMER + 1;
+			m_InvalidSwapBackAt = time_get() + (time_freq() * g_Config.m_ClInvalidSwapDelay) / 1000;
+		}
+		if(m_InvalidSwapBackAt > 0 && time_get() >= m_InvalidSwapBackAt)
+		{
+			Input.m_WantedWeapon = WEAPON_GUN + 1;
+			m_InvalidSwapBackAt = 0;
+		}
+		m_InvalidWasFiring = Firing;
+	}
+
+	// InvalidClient: dummy rescues the local tee with a hook when falling into freeze.
+	if(g_Config.m_ClInvalidDummyRescue && GameClient()->m_Snap.m_pLocalCharacter && GameClient()->m_Snap.m_LocalClientId >= 0)
+	{
+		const CNetObj_Character *pLocal = GameClient()->m_Snap.m_pLocalCharacter;
+		const bool Falling = pLocal->m_VelY > 120;
+		const CGameClient::CSnapState::CCharacterInfo &LocalChar = GameClient()->m_Snap.m_aCharacters[GameClient()->m_Snap.m_LocalClientId];
+		const bool NearFreeze = LocalChar.m_HasExtendedData && (LocalChar.m_ExtendedData.m_Flags & CHARACTERFLAG_IN_FREEZE) != 0;
+		if(Falling && NearFreeze)
+		{
+			int Rescuer = -1;
+			float Best = 1000000.0f;
+			for(int i = 0; i < MAX_CLIENTS; i++)
+			{
+				if(!GameClient()->m_Snap.m_aCharacters[i].m_Active)
+					continue;
+				const vec2 P = GameClient()->m_Snap.m_aCharacters[i].m_RenderPos;
+				const float D = distance(P, vec2(pLocal->m_X, pLocal->m_Y));
+				if(D < Best && D > 32.0f)
+				{
+					Best = D;
+					Rescuer = i;
+				}
+			}
+			if(Rescuer >= 0)
+			{
+				CNetObj_PlayerInput &DummyInput = m_aInputData[!g_Config.m_ClDummy];
+				const vec2 Target = GameClient()->m_Snap.m_aCharacters[Rescuer].m_RenderPos;
+				DummyInput.m_TargetX = (int)Target.x;
+				DummyInput.m_TargetY = (int)Target.y;
+				DummyInput.m_Hook = 1;
+			}
+		}
+	}
 }
 
 bool CControls::OnCursorMove(float x, float y, IInput::ECursorType CursorType)

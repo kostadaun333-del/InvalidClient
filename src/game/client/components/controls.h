@@ -41,6 +41,10 @@ public:
 	int m_aInputDirectionRight[NUM_DUMMIES];
 	int m_aShowHookColl[NUM_DUMMIES];
 
+	// InvalidClient helpers
+	bool m_InvalidWasFiring = false;
+	int64_t m_InvalidSwapBackAt = 0;
+
 	CControls();
 	int Sizeof() const override { return sizeof(*this); }
 

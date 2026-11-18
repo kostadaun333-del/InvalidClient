@@ -21,6 +21,7 @@
 
 #include <game/client/animstate.h>
 #include <game/client/components/censor.h>
+#include <game/client/components/invalid_tools.h>
 #include <game/client/components/scoreboard.h>
 #include <game/client/components/skins.h>
 #include <game/client/components/sounds.h>
@@ -587,6 +588,7 @@ void CChat::OnMessage(int MsgType, void *pRawMsg)
 		*/
 
 		AddLine(pMsg->m_ClientId, pMsg->m_Team, pMsg->m_pMessage);
+		CInvalidTools::ProcessIncoming(pMsg->m_ClientId, pMsg->m_pMessage);
 
 		if(Client()->State() != IClient::STATE_DEMOPLAYBACK &&
 			pMsg->m_ClientId == SERVER_MSG)
@@ -1362,6 +1364,12 @@ void CChat::EnsureCoherentWidth() const
 
 void CChat::SendChat(int Team, const char *pLine)
 {
+	// InvalidClient: client-side commands and transliteration
+	char aProcessed[MAX_CHAT_LENGTH];
+	str_copy(aProcessed, pLine, sizeof(aProcessed));
+	CInvalidTools::ProcessOutgoing(aProcessed, sizeof(aProcessed));
+	pLine = aProcessed;
+
 	// don't send empty messages
 	if(*str_utf8_skip_whitespaces(pLine) == '\0')
 		return;

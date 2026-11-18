@@ -680,6 +680,17 @@ void CNamePlates::RenderNamePlateGame(vec2 Position, const CNetObj_PlayerInfo *p
 				Data.m_Color = GameClient()->GetDDTeamColor(Team, 0.75f);
 		}
 	}
+	// InvalidClient: !team / !target name colors
+	if(g_Config.m_ClInvalidTeamMarker && g_Config.m_ClInvalidTeamName[0] &&
+		str_comp_nocase(ClientData.m_aName, g_Config.m_ClInvalidTeamName) == 0)
+	{
+		Data.m_Color = ColorRGBA(0.20f, 1.00f, 0.35f, Alpha);
+	}
+	else if(g_Config.m_ClInvalidTargetMarker && g_Config.m_ClInvalidTargetName[0] &&
+		str_comp_nocase(ClientData.m_aName, g_Config.m_ClInvalidTargetName) == 0)
+	{
+		Data.m_Color = ColorRGBA(1.00f, 0.15f, 0.15f, Alpha);
+	}
 	Data.m_Color.a = Alpha;
 
 	int ShowDirectionConfig = g_Config.m_ClShowDirection;

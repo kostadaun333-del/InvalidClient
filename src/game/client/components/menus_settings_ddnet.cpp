@@ -445,59 +445,162 @@ int CMenus::CPopupMapPickerContext::MapListFetchCallback(const CFsFileInfo *pInf
 
 void CMenus::RenderSettingsInvalid(CUIRect MainView)
 {
-	CUIRect Label, Button;
+	CUIRect Label, Button, Tabs;
 
-	MainView.HSplitTop(30.0f, &Label, &MainView);
-	Ui()->DoLabel(&Label, "InvalidClient - all features in one place", 20.0f, TEXTALIGN_ML);
+	MainView.HSplitTop(28.0f, &Label, &MainView);
+	Ui()->DoLabel(&Label, "InvalidClient - все функции в одном месте", 20.0f, TEXTALIGN_ML);
 
-	MainView.HSplitTop(26.0f, &Label, &MainView);
-	Ui()->DoLabel(&Label, "Cosmetics", 16.0f, TEXTALIGN_ML);
+	// sub tabs
+	MainView.HSplitTop(26.0f, &Tabs, &MainView);
+	static CButtonContainer s_aInvalidTabs[5];
+	const char *apTabs[5] = {"Визуал", "Ког", "Чат", "Погода", "Прочее"};
+	for(int i = 0; i < 5; i++)
+	{
+		CUIRect Tab;
+		Tabs.VSplitLeft(120.0f, &Tab, &Tabs);
+		Tab.VMargin(2.0f, &Tab);
+		if(DoButton_MenuTab(&s_aInvalidTabs[i], apTabs[i], g_Config.m_ClInvalidSubTab == i, &Tab, IGraphics::CORNER_ALL))
+			g_Config.m_ClInvalidSubTab = i;
+	}
+	MainView.HSplitTop(6.0f, nullptr, &MainView);
 
-	MainView.HSplitTop(20.0f, &Button, &MainView);
-	if(DoButton_CheckBox(&g_Config.m_ClInvalidWings, "Wings", g_Config.m_ClInvalidWings, &Button))
-		g_Config.m_ClInvalidWings ^= 1;
-	MainView.HSplitTop(20.0f, &Button, &MainView);
-	Ui()->DoScrollbarOption(&g_Config.m_ClInvalidWingStyle, &g_Config.m_ClInvalidWingStyle, &Button, "Wing style", 0, 3);
+	const int Tab = g_Config.m_ClInvalidSubTab;
 
-	MainView.HSplitTop(20.0f, &Button, &MainView);
-	if(DoButton_CheckBox(&g_Config.m_ClInvalidGlasses, "Glasses", g_Config.m_ClInvalidGlasses, &Button))
-		g_Config.m_ClInvalidGlasses ^= 1;
-	MainView.HSplitTop(20.0f, &Button, &MainView);
-	Ui()->DoScrollbarOption(&g_Config.m_ClInvalidGlassesStyle, &g_Config.m_ClInvalidGlassesStyle, &Button, "Glasses style", 0, 2);
+	if(Tab == 0) // Визуал
+	{
+		MainView.HSplitTop(24.0f, &Label, &MainView);
+		Ui()->DoLabel(&Label, "Крылья и аксессуары", 16.0f, TEXTALIGN_ML);
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_ClInvalidWings, "Крылья", g_Config.m_ClInvalidWings, &Button))
+			g_Config.m_ClInvalidWings ^= 1;
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		Ui()->DoScrollbarOption(&g_Config.m_ClInvalidWingStyle, &g_Config.m_ClInvalidWingStyle, &Button, "Стиль крыльев", 0, 5);
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		Ui()->DoScrollbarOption(&g_Config.m_ClInvalidWingFlap, &g_Config.m_ClInvalidWingFlap, &Button, "Скорость взмаха", 0, 100, &CUi::ms_LinearScrollbarScale, 0u, "%");
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		Ui()->DoScrollbarOption(&g_Config.m_ClInvalidWingGlow, &g_Config.m_ClInvalidWingGlow, &Button, "Свечение крыльев", 0, 100, &CUi::ms_LinearScrollbarScale, 0u, "%");
 
-	MainView.HSplitTop(20.0f, &Button, &MainView);
-	if(DoButton_CheckBox(&g_Config.m_ClInvalidHats, "Hats", g_Config.m_ClInvalidHats, &Button))
-		g_Config.m_ClInvalidHats ^= 1;
-	MainView.HSplitTop(20.0f, &Button, &MainView);
-	Ui()->DoScrollbarOption(&g_Config.m_ClInvalidHatStyle, &g_Config.m_ClInvalidHatStyle, &Button, "Hat style", 0, 3);
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_ClInvalidGlasses, "Очки", g_Config.m_ClInvalidGlasses, &Button))
+			g_Config.m_ClInvalidGlasses ^= 1;
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		Ui()->DoScrollbarOption(&g_Config.m_ClInvalidGlassesStyle, &g_Config.m_ClInvalidGlassesStyle, &Button, "Стиль очков", 0, 7);
 
-	MainView.HSplitTop(26.0f, &Label, &MainView);
-	Ui()->DoLabel(&Label, "Weather", 16.0f, TEXTALIGN_ML);
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_ClInvalidHats, "Шляпы", g_Config.m_ClInvalidHats, &Button))
+			g_Config.m_ClInvalidHats ^= 1;
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		Ui()->DoScrollbarOption(&g_Config.m_ClInvalidHatStyle, &g_Config.m_ClInvalidHatStyle, &Button, "Стиль шляпы", 0, 5);
 
-	MainView.HSplitTop(20.0f, &Button, &MainView);
-	if(DoButton_CheckBox(&g_Config.m_ClInvalidWeather, "Snow, snowdrifts and blizzard", g_Config.m_ClInvalidWeather, &Button))
-		g_Config.m_ClInvalidWeather ^= 1;
-	MainView.HSplitTop(20.0f, &Button, &MainView);
-	Ui()->DoScrollbarOption(&g_Config.m_ClInvalidSnowIntensity, &g_Config.m_ClInvalidSnowIntensity, &Button, "Snow intensity", 0, 100, &CUi::ms_LinearScrollbarScale, 0u, "%");
+		MainView.HSplitTop(24.0f, &Label, &MainView);
+		Ui()->DoLabel(&Label, "Частицы и эффекты", 16.0f, TEXTALIGN_ML);
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		Ui()->DoScrollbarOption(&g_Config.m_ClInvalidTrail, &g_Config.m_ClInvalidTrail, &Button, "След за игроком", 0, 100, &CUi::ms_LinearScrollbarScale, 0u, "%");
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		Ui()->DoScrollbarOption(&g_Config.m_ClInvalidTrailStyle, &g_Config.m_ClInvalidTrailStyle, &Button, "Стиль следа", 0, 4);
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_ClInvalidCigarette, "Сигарета с дымом", g_Config.m_ClInvalidCigarette, &Button))
+			g_Config.m_ClInvalidCigarette ^= 1;
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_ClInvalidSpray, "Водяной спрей", g_Config.m_ClInvalidSpray, &Button))
+			g_Config.m_ClInvalidSpray ^= 1;
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_ClInvalidTears, "Слёзы и грустные смайлы при попадании", g_Config.m_ClInvalidTears, &Button))
+			g_Config.m_ClInvalidTears ^= 1;
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_ClInvalidFreezeGlow, "Красное свечение фриза по предикту", g_Config.m_ClInvalidFreezeGlow, &Button))
+			g_Config.m_ClInvalidFreezeGlow ^= 1;
+	}
+	else if(Tab == 1) // Ког
+	{
+		MainView.HSplitTop(24.0f, &Label, &MainView);
+		Ui()->DoLabel(&Label, "Помощник для кога", 16.0f, TEXTALIGN_ML);
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_ClInvalidQuickSwap, "Быстрый свап: пистолет -> молот -> обратно", g_Config.m_ClInvalidQuickSwap, &Button))
+			g_Config.m_ClInvalidQuickSwap ^= 1;
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		Ui()->DoScrollbarOption(&g_Config.m_ClInvalidSwapDelay, &g_Config.m_ClInvalidSwapDelay, &Button, "Задержка свапа", 10, 250);
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_ClInvalidDummyRescue, "Дамми спасает хуком у фриза", g_Config.m_ClInvalidDummyRescue, &Button))
+			g_Config.m_ClInvalidDummyRescue ^= 1;
 
-	MainView.HSplitTop(26.0f, &Label, &MainView);
-	Ui()->DoLabel(&Label, "Camera", 16.0f, TEXTALIGN_ML);
+		MainView.HSplitTop(24.0f, &Label, &MainView);
+		Ui()->DoLabel(&Label, "Маркеры игроков", 16.0f, TEXTALIGN_ML);
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_ClInvalidTeamMarker, "!team - зелёный ник, стрелка и дистанция", g_Config.m_ClInvalidTeamMarker, &Button))
+			g_Config.m_ClInvalidTeamMarker ^= 1;
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_ClInvalidTargetMarker, "!target - красный ник", g_Config.m_ClInvalidTargetMarker, &Button))
+			g_Config.m_ClInvalidTargetMarker ^= 1;
+		MainView.HSplitTop(16.0f, &Label, &MainView);
+		Ui()->DoLabel(&Label, "Команды вводятся в чат: !team ник / !target ник / !clear", 12.0f, TEXTALIGN_ML);
+		MainView.HSplitTop(16.0f, &Label, &MainView);
+		Ui()->DoLabel(&Label, "Текущая цель !team:", 12.0f, TEXTALIGN_ML);
+		Ui()->DoLabel(&Label, g_Config.m_ClInvalidTeamName, 12.0f, TEXTALIGN_ML);
+	}
+	else if(Tab == 2) // Чат
+	{
+		MainView.HSplitTop(24.0f, &Label, &MainView);
+		Ui()->DoLabel(&Label, "Чат и команды", 16.0f, TEXTALIGN_ML);
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_ClInvalidTransliterate, "Транслитерация: жопа -> jopa", g_Config.m_ClInvalidTransliterate, &Button))
+			g_Config.m_ClInvalidTransliterate ^= 1;
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_ClInvalidAutoReply, "Автоответ на упоминание", g_Config.m_ClInvalidAutoReply, &Button))
+			g_Config.m_ClInvalidAutoReply ^= 1;
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_ClInvalidAutoReplyAway, " Отвечать также в альт-табе", g_Config.m_ClInvalidAutoReplyAway, &Button))
+			g_Config.m_ClInvalidAutoReplyAway ^= 1;
+		MainView.HSplitTop(20.0f, &Label, &MainView);
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		Ui()->DoLabel(&Label, "Текст ответа", 14.0f, TEXTALIGN_ML);
+		static CLineInput s_AutoReply(g_Config.m_ClInvalidAutoReplyText, sizeof(g_Config.m_ClInvalidAutoReplyText));
+		Ui()->DoEditBox(&s_AutoReply, &Button, 14.0f);
+	}
+	else if(Tab == 3) // Погода
+	{
+		MainView.HSplitTop(24.0f, &Label, &MainView);
+		Ui()->DoLabel(&Label, "Погода", 16.0f, TEXTALIGN_ML);
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_ClInvalidWeather, "Погода включена", g_Config.m_ClInvalidWeather, &Button))
+			g_Config.m_ClInvalidWeather ^= 1;
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		Ui()->DoScrollbarOption(&g_Config.m_ClInvalidWeatherType, &g_Config.m_ClInvalidWeatherType, &Button, "Тип: снег/дождь/сакура/листья/пепел", 0, 4);
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		Ui()->DoScrollbarOption(&g_Config.m_ClInvalidSnowIntensity, &g_Config.m_ClInvalidSnowIntensity, &Button, "Интенсивность", 0, 100, &CUi::ms_LinearScrollbarScale, 0u, "%");
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_ClInvalidLightning, "Молнии", g_Config.m_ClInvalidLightning, &Button))
+			g_Config.m_ClInvalidLightning ^= 1;
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		Ui()->DoScrollbarOption(&g_Config.m_ClInvalidFog, &g_Config.m_ClInvalidFog, &Button, "Туман", 0, 100, &CUi::ms_LinearScrollbarScale, 0u, "%");
+	}
+	else // Прочее
+	{
+		MainView.HSplitTop(24.0f, &Label, &MainView);
+		Ui()->DoLabel(&Label, "Интерфейс", 16.0f, TEXTALIGN_ML);
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_ClInvalidFont, "Шрифт Nunito", g_Config.m_ClInvalidFont, &Button))
+			g_Config.m_ClInvalidFont ^= 1;
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_ClInvalidSplash, "Красивая заставка", g_Config.m_ClInvalidSplash, &Button))
+			g_Config.m_ClInvalidSplash ^= 1;
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		Ui()->DoScrollbarOption(&g_Config.m_ClInvalidSmoothCamera, &g_Config.m_ClInvalidSmoothCamera, &Button, "Плавная камера", 0, 100);
 
-	MainView.HSplitTop(20.0f, &Button, &MainView);
-	Ui()->DoScrollbarOption(&g_Config.m_ClInvalidSmoothCamera, &g_Config.m_ClInvalidSmoothCamera, &Button, "Smooth camera (0 = off)", 0, 100);
-
-	MainView.HSplitTop(26.0f, &Label, &MainView);
-	Ui()->DoLabel(&Label, "Spectator analyzer", 16.0f, TEXTALIGN_ML);
-
-	MainView.HSplitTop(20.0f, &Button, &MainView);
-	if(DoButton_CheckBox(&g_Config.m_ClInvalidAnalysisOverlay, "Show suspicion overlay while spectating", g_Config.m_ClInvalidAnalysisOverlay, &Button))
-		g_Config.m_ClInvalidAnalysisOverlay ^= 1;
-
-	MainView.HSplitTop(10.0f, nullptr, &MainView);
-	MainView.HSplitTop(16.0f, &Label, &MainView);
-	Ui()->DoLabel(&Label, "The suspicion percentage is only a heuristic based on snapshot data.", 12.0f, TEXTALIGN_ML);
-	MainView.HSplitTop(16.0f, &Label, &MainView);
-	Ui()->DoLabel(&Label, "It is not proof of cheating and must never be the only reason for a ban.", 12.0f, TEXTALIGN_ML);
-	MainView.HSplitTop(16.0f, &Label, &MainView);
-	Ui()->DoLabel(&Label, "F9 opens the same settings as a quick in-game overlay.", 12.0f, TEXTALIGN_ML);
+		MainView.HSplitTop(24.0f, &Label, &MainView);
+		Ui()->DoLabel(&Label, "Анализ и наблюдение", 16.0f, TEXTALIGN_ML);
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_ClInvalidSpectatorWarning, "Показывать, кто за тобой наблюдает", g_Config.m_ClInvalidSpectatorWarning, &Button))
+			g_Config.m_ClInvalidSpectatorWarning ^= 1;
+		MainView.HSplitTop(20.0f, &Button, &MainView);
+		if(DoButton_CheckBox(&g_Config.m_ClInvalidAnalysisOverlay, "Оверлей анализа (только эвристика)", g_Config.m_ClInvalidAnalysisOverlay, &Button))
+			g_Config.m_ClInvalidAnalysisOverlay ^= 1;
+		MainView.HSplitTop(12.0f, nullptr, &MainView);
+		MainView.HSplitTop(16.0f, &Label, &MainView);
+		Ui()->DoLabel(&Label, "Процент подозрения - лишь оценка по данным сниapshots.", 12.0f, TEXTALIGN_ML);
+		MainView.HSplitTop(16.0f, &Label, &MainView);
+		Ui()->DoLabel(&Label, "Это не доказательство и не повод для бана.", 12.0f, TEXTALIGN_ML);
+		MainView.HSplitTop(16.0f, &Label, &MainView);
+		Ui()->DoLabel(&Label, "F9 - быстрое меню в игре.", 12.0f, TEXTALIGN_ML);
+	}
 }

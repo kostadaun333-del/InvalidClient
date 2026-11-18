@@ -1,11 +1,12 @@
 {
     "font files": [
         "DejaVuSans.ttf",
+        "Nunito-Variable.ttf",
         "Font_Awesome_6_Free-Solid-900.otf",
         "GlowSansJ-Compressed-Book.otf",
         "SourceHanSans.ttc"
     ],
-    "default": "DejaVu Sans",
+    "default": "Nunito",
     "language variants": {
         "japanese": "Glow Sans J Compressed Book",
         "korean": "Source Han Sans K",

@@ -49,6 +49,8 @@
 #include "components/infomessages.h"
 #include "components/invalid_analysis.h"
 #include "components/invalid_panel.h"
+#include "components/invalid_tools.h"
+#include "components/invalid_visuals.h"
 #include "components/invalid_weather.h"
 #include "components/items.h"
 #include "components/key_binder.h"
@@ -171,6 +173,8 @@ public:
 	CHud m_Hud;
 	CInvalidAnalysis m_InvalidAnalysis;
 	CInvalidPanel m_InvalidPanel;
+	CInvalidTools m_InvalidTools;
+	CInvalidVisuals m_InvalidVisuals;
 	CInvalidWeather m_InvalidWeather;
 	CImportantAlert m_ImportantAlert;
 	CDebugHud m_DebugHud;

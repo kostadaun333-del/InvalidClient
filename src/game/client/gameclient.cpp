@@ -147,6 +147,8 @@ void CGameClient::OnConsoleInit()
 					      &m_NamePlates,
 					      &m_Particles.m_RenderExtra,
 					      &m_Particles.m_RenderGeneral,
+					      &m_InvalidTools,
+					      &m_InvalidVisuals,
 					      &m_InvalidWeather,
 					      &m_FreezeBars,
 					      &m_DamageInd,

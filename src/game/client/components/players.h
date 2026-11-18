@@ -16,7 +16,7 @@ class CPlayers : public CComponent
 
 	void RenderHand(const CTeeRenderInfo *pInfo, vec2 CenterPos, vec2 Dir, float AngleOffset, vec2 PostRotOffset, float Alpha);
 	// InvalidClient: purely client-side cosmetic overlays (wings, glasses, hats)
-	void RenderInvalidCosmetics(vec2 BodyPos, vec2 Direction, float Alpha, float BaseSize, int ClientId);
+	void RenderInvalidCosmetics(vec2 BodyPos, vec2 Direction, float Alpha, float BaseSize, int ClientId, int Emote);
 	void RenderPlayer(
 		const CScreenRect &ScreenRect,
 		const CNetObj_Character *pPrevChar,

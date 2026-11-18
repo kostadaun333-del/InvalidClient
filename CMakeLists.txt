@@ -2689,6 +2689,10 @@ if(CLIENT)
     components/invalid_analysis.h
     components/invalid_panel.cpp
     components/invalid_panel.h
+    components/invalid_tools.cpp
+    components/invalid_tools.h
+    components/invalid_visuals.cpp
+    components/invalid_visuals.h
     components/invalid_weather.cpp
     components/invalid_weather.h
     components/items.cpp

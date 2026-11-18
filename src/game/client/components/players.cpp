@@ -565,135 +565,9 @@ void CPlayers::RenderHook(
 	RenderHand(&RenderInfo, Position, normalize(HookPos - Pos), -pi / 2, vec2(20, 0), Alpha);
 }
 
-void CPlayers::RenderInvalidCosmetics(vec2 BodyPos, vec2 Direction, float Alpha, float BaseSize, int ClientId)
+void CPlayers::RenderInvalidCosmetics(vec2 BodyPos, vec2 Direction, float Alpha, float BaseSize, int ClientId, int Emote)
 {
-	if(Alpha <= 0.0f || BaseSize <= 0.0f)
-		return;
-
-	const float AnimTime = (float)(time() / (double)time_freq());
-	const float Flap = std::sin(AnimTime * 6.0f + ClientId * 1.7f);
-	const float Facing = angle(Direction);
-
-	Graphics()->TextureClear();
-	Graphics()->QuadsBegin();
-
-	if(g_Config.m_ClInvalidWings)
-	{
-		ColorRGBA WingColor = ColorRGBA(0.95f, 0.95f, 1.0f, 1.0f);
-		float WingScale = 1.0f;
-		switch(g_Config.m_ClInvalidWingStyle % 4)
-		{
-		case 1:
-			WingColor = ColorRGBA(0.35f, 0.15f, 0.45f, 1.0f);
-			WingScale = 0.85f;
-			break;
-		case 2:
-			WingColor = ColorRGBA(0.75f, 0.55f, 0.30f, 1.0f);
-			break;
-		case 3:
-			WingColor = ColorRGBA(0.45f, 0.90f, 0.95f, 1.0f);
-			WingScale = 0.75f;
-			break;
-		default:
-			break;
-		}
-		Graphics()->SetColor(WingColor.WithMultipliedAlpha(Alpha * 0.85f));
-		for(int Side = -1; Side <= 1; Side += 2)
-		{
-			Graphics()->QuadsSetRotation(Facing + Side * (0.45f + Flap * 0.12f));
-			const vec2 Offset = vec2(Side * BaseSize * 0.20f, BaseSize * 0.04f);
-			IGraphics::CQuadItem Item(BodyPos.x + Offset.x, BodyPos.y + Offset.y, BaseSize * 0.30f * WingScale, BaseSize * 0.95f * WingScale);
-			Graphics()->QuadsDraw(&Item, 1);
-		}
-	}
-
-	if(g_Config.m_ClInvalidGlasses)
-	{
-		ColorRGBA GlassColor = ColorRGBA(0.05f, 0.05f, 0.08f, 1.0f);
-		switch(g_Config.m_ClInvalidGlassesStyle % 3)
-		{
-		case 1:
-			GlassColor = ColorRGBA(0.10f, 0.20f, 0.35f, 1.0f);
-			break;
-		case 2:
-			GlassColor = ColorRGBA(0.85f, 0.85f, 0.95f, 1.0f);
-			break;
-		default:
-			break;
-		}
-		Graphics()->SetColor(GlassColor.WithMultipliedAlpha(Alpha));
-		Graphics()->QuadsSetRotation(0.0f);
-		const float EyeScale = BaseSize * 0.22f;
-		const float Separation = BaseSize * 0.16f;
-		const vec2 Offset = vec2(Direction.x * 0.125f, -0.05f + Direction.y * 0.10f) * BaseSize;
-		for(int Side = -1; Side <= 1; Side += 2)
-		{
-			IGraphics::CQuadItem Item(BodyPos.x + Offset.x + Side * Separation, BodyPos.y + Offset.y, EyeScale, EyeScale * 0.60f);
-			Graphics()->QuadsDraw(&Item, 1);
-		}
-		IGraphics::CQuadItem Bridge(BodyPos.x + Offset.x, BodyPos.y + Offset.y, Separation * 2.0f, BaseSize * 0.025f);
-		Graphics()->QuadsDraw(&Bridge, 1);
-	}
-
-	if(g_Config.m_ClInvalidHats)
-	{
-		ColorRGBA HatColor = ColorRGBA(1.0f, 0.85f, 0.15f, 1.0f);
-		switch(g_Config.m_ClInvalidHatStyle % 4)
-		{
-		case 1:
-			HatColor = ColorRGBA(0.25f, 0.35f, 0.85f, 1.0f);
-			break;
-		case 2:
-			HatColor = ColorRGBA(0.75f, 0.20f, 0.20f, 1.0f);
-			break;
-		case 3:
-			HatColor = ColorRGBA(1.0f, 0.95f, 0.55f, 1.0f);
-			break;
-		default:
-			break;
-		}
-		Graphics()->SetColor(HatColor.WithMultipliedAlpha(Alpha));
-		Graphics()->QuadsSetRotation(0.0f);
-		const float HatY = BodyPos.y - BaseSize * 0.43f;
-		switch(g_Config.m_ClInvalidHatStyle % 4)
-		{
-		case 0: // crown
-			for(int i = -1; i <= 1; i++)
-			{
-				IGraphics::CQuadItem Item(BodyPos.x + i * BaseSize * 0.17f, HatY - BaseSize * 0.12f, BaseSize * 0.13f, BaseSize * 0.30f);
-				Graphics()->QuadsDraw(&Item, 1);
-			}
-			break;
-		case 1: // wizard hat
-		{
-			IGraphics::CQuadItem Top(BodyPos.x, HatY - BaseSize * 0.22f, BaseSize * 0.16f, BaseSize * 0.55f);
-			IGraphics::CQuadItem Brim(BodyPos.x, HatY, BaseSize * 0.55f, BaseSize * 0.08f);
-			Graphics()->QuadsDraw(&Top, 1);
-			Graphics()->QuadsDraw(&Brim, 1);
-			break;
-		}
-		case 2: // cap
-		{
-			IGraphics::CQuadItem Top(BodyPos.x, HatY, BaseSize * 0.50f, BaseSize * 0.18f);
-			IGraphics::CQuadItem Visor(BodyPos.x + Direction.x * BaseSize * 0.25f, HatY + BaseSize * 0.10f, BaseSize * 0.40f, BaseSize * 0.06f);
-			Graphics()->QuadsDraw(&Top, 1);
-			Graphics()->QuadsDraw(&Visor, 1);
-			break;
-		}
-		default: // halo
-			for(int i = 0; i < 8; i++)
-			{
-				const float A = i * pi / 4.0f;
-				IGraphics::CQuadItem Item(BodyPos.x + std::cos(A) * BaseSize * 0.25f, HatY - BaseSize * 0.10f + std::sin(A) * BaseSize * 0.08f, BaseSize * 0.10f, BaseSize * 0.06f);
-				Graphics()->QuadsDraw(&Item, 1);
-			}
-			break;
-		}
-	}
-
-	Graphics()->QuadsSetRotation(0.0f);
-	Graphics()->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-	Graphics()->QuadsEnd();
+	GameClient()->m_InvalidVisuals.RenderAccessories(BodyPos, Direction, Alpha, BaseSize, ClientId, Emote);
 }
 
 void CPlayers::RenderPlayer(
@@ -997,12 +871,14 @@ void CPlayers::RenderPlayer(
 		RenderTools()->RenderTee(&State, &RenderInfo, Player.m_Emote, Direction, ShadowPosition, g_Config.m_ClUnpredictedShadowAlpha / 100.f); // render ghost
 	}
 
-	RenderTools()->RenderTee(&State, &RenderInfo, Player.m_Emote, Direction, Position, Alpha);
-
 	float TeeAnimScale, TeeBaseSize;
 	CRenderTools::GetRenderTeeAnimScaleAndBaseSize(&RenderInfo, TeeAnimScale, TeeBaseSize);
 	vec2 BodyPos = Position + vec2(State.GetBody()->m_X, State.GetBody()->m_Y) * TeeAnimScale;
-	RenderInvalidCosmetics(BodyPos, Direction, Alpha, TeeBaseSize, ClientId);
+	GameClient()->m_InvalidVisuals.RenderWings(BodyPos, Direction, Alpha, TeeBaseSize, ClientId);
+
+	RenderTools()->RenderTee(&State, &RenderInfo, Player.m_Emote, Direction, Position, Alpha);
+
+	RenderInvalidCosmetics(BodyPos, Direction, Alpha, TeeBaseSize, ClientId, Player.m_Emote);
 	if(RenderInfo.m_TeeRenderFlags & TEE_EFFECT_FROZEN)
 	{
 		GameClient()->m_Effects.FreezingFlakes(BodyPos, vec2(32, 32), Alpha);
