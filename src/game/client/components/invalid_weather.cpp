@@ -50,8 +50,8 @@ void CInvalidWeather::OnRender()
 	if(g_Config.m_ClInvalidFog > 0)
 	{
 		const float F = g_Config.m_ClInvalidFog / 100.0f;
-		Graphics()->DrawRect(0.0f, 0.0f, Width, Height, ColorRGBA(0.42f, 0.50f, 0.62f, F * 0.28f));
-		Graphics()->DrawRect(0.0f, Height * 0.45f, Width, Height * 0.55f, ColorRGBA(0.50f, 0.56f, 0.66f, F * 0.18f));
+		Graphics()->DrawRect(0.0f, 0.0f, Width, Height, ColorRGBA(0.42f, 0.50f, 0.62f, F * 0.28f), IGraphics::CORNER_ALL, 0.0f);
+		Graphics()->DrawRect(0.0f, Height * 0.45f, Width, Height * 0.55f, ColorRGBA(0.50f, 0.56f, 0.66f, F * 0.18f), IGraphics::CORNER_ALL, 0.0f);
 	}
 
 	// lightning
@@ -59,9 +59,9 @@ void CInvalidWeather::OnRender()
 	{
 		const float Cycle = std::fmod(Time, 9.0f);
 		if(Cycle < 0.12f)
-			Graphics()->DrawRect(0.0f, 0.0f, Width, Height, ColorRGBA(0.85f, 0.92f, 1.0f, 0.55f));
+			Graphics()->DrawRect(0.0f, 0.0f, Width, Height, ColorRGBA(0.85f, 0.92f, 1.0f, 0.55f), IGraphics::CORNER_ALL, 0.0f);
 		else if(Cycle > 0.12f && Cycle < 0.20f)
-			Graphics()->DrawRect(0.0f, 0.0f, Width, Height, ColorRGBA(0.80f, 0.88f, 1.0f, 0.25f));
+			Graphics()->DrawRect(0.0f, 0.0f, Width, Height, ColorRGBA(0.80f, 0.88f, 1.0f, 0.25f), IGraphics::CORNER_ALL, 0.0f);
 	}
 
 	Graphics()->QuadsBegin();

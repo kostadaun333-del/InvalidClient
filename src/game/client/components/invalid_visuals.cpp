@@ -5,7 +5,7 @@
 
 #include <base/color.h>
 #include <base/math.h>
-#include <base/system.h>
+#include <base/time.h>
 #include <base/vmath.h>
 
 #include <engine/client.h>
@@ -112,7 +112,8 @@ IGraphics::CTextureHandle CInvalidVisuals::MakeWingTexture(int Style)
 		{12, 0.10f, 1.44f, 0.48f, 0.75f, 0.042f, vec3(0.12f, 0.04f, 0.36f), vec3(0.58f, 0.38f, 0.98f), vec3(0.82f, 0.40f, 1.00f)},
 		{10, 0.14f, 1.34f, 0.44f, 0.70f, 0.056f, vec3(0.04f, 0.32f, 0.10f), vec3(0.62f, 0.96f, 0.34f), vec3(0.42f, 1.00f, 0.48f)},
 	};
-	const SWingStyle &Style = s_aStyles[std::clamp(Style, 0, 5)];
+	const int StyleIdx = std::clamp(Style, 0, 5);
+	const SWingStyle &Ws = s_aStyles[StyleIdx];
 	const vec2 Root(0.14f, 0.16f);
 
 	for(int Y = 0; Y < Size; Y++)
@@ -122,13 +123,13 @@ IGraphics::CTextureHandle CInvalidVisuals::MakeWingTexture(int Style)
 			const vec2 P((float)(X + 0.5) / Size, 1.0f - (float)(Y + 0.5) / Size);
 			float BestDist = 1000.0f;
 			float BestT = 0.0f;
-			for(int i = 0; i < Style.m_Count; i++)
+			for(int i = 0; i < Ws.m_Count; i++)
 			{
-				const float T = (float)i / (float)(Style.m_Count - 1);
-				const float A = Style.m_A0 + (Style.m_A1 - Style.m_A0) * T;
-				const float Len = Mix(Style.m_Len0, Style.m_Len1, std::sin(pi * T));
+				const float T = (float)i / (float)(Ws.m_Count - 1);
+				const float A = Ws.m_A0 + (Ws.m_A1 - Ws.m_A0) * T;
+				const float Len = Mix(Ws.m_Len0, Ws.m_Len1, std::sin(pi * T));
 				const vec2 End = Root + vec2(std::cos(A), std::sin(A)) * Len;
-				const float Radius = Style.m_Width * (1.0f - 0.45f * T);
+				const float Radius = Ws.m_Width * (1.0f - 0.45f * T);
 				const float D = SdfCapsule(P, Root, End, Radius);
 				if(D < BestDist)
 				{
@@ -138,11 +139,11 @@ IGraphics::CTextureHandle CInvalidVisuals::MakeWingTexture(int Style)
 			}
 			const float Body = 1.0f - Smooth(-0.007f, 0.006f, BestDist);
 			const float Halo = (1.0f - Smooth(0.0f, 0.055f, BestDist)) * (1.0f - Body);
-			vec3 Color = Mix(Style.m_Base, Style.m_Tip, Clamp01(BestT * 0.55f + P.y * 0.55f));
-			Color += Style.m_Glow * Halo * 0.55f;
-			const float Sheen = 1.0f - Smooth(0.0f, Style.m_Width * 0.55f, -BestDist);
+			vec3 Color = Mix(Ws.m_Base, Ws.m_Tip, Clamp01(BestT * 0.55f + P.y * 0.55f));
+			Color += Ws.m_Glow * Halo * 0.55f;
+			const float Sheen = 1.0f - Smooth(0.0f, Ws.m_Width * 0.55f, -BestDist);
 			Color += vec3(1.0f, 1.0f, 1.0f) * Sheen * 0.16f;
-			if(Style == 4 && Hash2(X / 3, Y / 3) > 0.985f)
+			if(StyleIdx == 4 && Hash2(X / 3, Y / 3) > 0.985f)
 				Color += vec3(1.0f, 1.0f, 1.0f) * 0.8f;
 			PutPixel(Image, X, Y, Color, Clamp01(Body + Halo * 0.42f));
 		}

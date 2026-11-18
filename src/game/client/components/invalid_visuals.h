@@ -6,6 +6,7 @@
 #include <game/client/component.h>
 
 #include <generated/protocol.h>
+#include <engine/shared/protocol.h>
 
 class CInvalidVisuals : public CComponent
 {

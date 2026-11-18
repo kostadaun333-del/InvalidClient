@@ -4,7 +4,7 @@
 #include <base/color.h>
 #include <base/math.h>
 #include <base/str.h>
-#include <base/system.h>
+#include <base/time.h>
 #include <base/vmath.h>
 
 #include <engine/client.h>
@@ -130,7 +130,7 @@ void CInvalidTools::ProcessIncoming(int ClientId, const char *pLine)
 {
 	if(!g_Config.m_ClInvalidAutoReply)
 		return;
-	if(ClientId < 0 || ClientId == GameClient()->m_Snap.m_LocalClientId)
+	if(ClientId < 0 || GameClient()->m_Snap.m_LocalClientId < 0 || ClientId == GameClient()->m_Snap.m_LocalClientId)
 		return;
 	const char *pMyName = GameClient()->m_aClients[GameClient()->m_Snap.m_LocalClientId].m_aName;
 	if(!pMyName[0] || !str_find_nocase(pLine, pMyName))
@@ -199,9 +199,9 @@ void CInvalidTools::RenderSpectatorWarning()
 	int Num = 0;
 	for(int i = 0; i < MAX_CLIENTS; i++)
 	{
-		if(Snap.m_apInfoByName[i] == nullptr || Snap.m_apInfoByName[i]->m_Team != TEAM_SPEC)
+		if(Snap.m_apInfoByName[i] == nullptr || Snap.m_apInfoByName[i]->m_Team != TEAM_SPECTATORS)
 			continue;
-		if(Snap.m_apInfoByName[i]->m_Local)
+		if(i == Snap.m_LocalClientId)
 			continue;
 		aSpecs[Num++] = i;
 	}
