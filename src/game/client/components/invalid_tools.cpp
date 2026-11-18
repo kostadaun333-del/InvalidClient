@@ -10,6 +10,7 @@
 #include <engine/client.h>
 #include <engine/client/enums.h>
 #include <engine/graphics.h>
+#include <engine/kernel.h>
 #include <engine/shared/config.h>
 #include <engine/textrender.h>
 
@@ -135,7 +136,8 @@ void CInvalidTools::ProcessIncoming(int ClientId, const char *pLine)
 	const char *pMyName = GameClient()->m_aClients[GameClient()->m_Snap.m_LocalClientId].m_aName;
 	if(!pMyName[0] || !str_find_nocase(pLine, pMyName))
 		return;
-	if(!g_Config.m_ClInvalidAutoReplyAway && Graphics()->WindowActive() == 0)
+	IEngineGraphics *pGraphics = Kernel()->RequestInterface<IEngineGraphics>();
+	if(!g_Config.m_ClInvalidAutoReplyAway && pGraphics && pGraphics->WindowActive() == 0)
 		return;
 	GameClient()->m_Chat.SendChat(0, g_Config.m_ClInvalidAutoReplyText);
 }

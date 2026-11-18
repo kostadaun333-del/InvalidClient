@@ -343,7 +343,7 @@ IGraphics::CTextureHandle CInvalidVisuals::MakeSoftCircle(const char *pName, flo
 	{
 		for(int X = 0; X < S; X++)
 		{
-			const vec2 P = ((vec2(X, Y) + vec2(0.5f)) / S) * 2.0f - vec2(1.0f);
+			const vec2 P(((X + 0.5f) / S) * 2.0f - 1.0f, ((Y + 0.5f) / S) * 2.0f - 1.0f);
 			const float D = length(P);
 			const float A = (1.0f - Smooth(Core, 1.0f, D)) * (1.0f - Smooth(0.96f, 1.0f, D));
 			PutPixel(Image, X, Y, vec3(R, G, B), Clamp01(A));
@@ -360,7 +360,7 @@ IGraphics::CTextureHandle CInvalidVisuals::MakeSadTexture()
 	{
 		for(int X = 0; X < S; X++)
 		{
-			const vec2 P = ((vec2(X, Y) + vec2(0.5f)) / S) * 2.0f - vec2(1.0f);
+			const vec2 P(((X + 0.5f) / S) * 2.0f - 1.0f, ((Y + 0.5f) / S) * 2.0f - 1.0f);
 			const float D = length(P);
 			float Mask = 0.0f;
 			vec3 Color = vec3(0.0f, 0.0f, 0.0f);
